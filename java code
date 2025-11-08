@@ -1,0 +1,52 @@
+package cj8;
+import java.util.*;
+
+public class cj8s {
+	
+	    private static final Map<String, Map<Character, Set<String>>> nfa = new HashMap<>();
+	    static {	    	
+	        Map<Character, Set<String>> q0Transitions = new HashMap<>();
+	        q0Transitions.put('a', new HashSet<>(Arrays.asList("q0", "q1")));
+	        q0Transitions.put('b', new HashSet<>(Arrays.asList("q0")));
+	        nfa.put("q0", q0Transitions);
+	        Map<Character, Set<String>> q1Transitions = new HashMap<>();
+	        q1Transitions.put('a', new HashSet<>(Arrays.asList("q1")));
+	        q1Transitions.put('b', new HashSet<>(Arrays.asList("q2")));
+	        nfa.put("q1", q1Transitions);
+	        Map<Character, Set<String>> q2Transitions = new HashMap<>();
+	        q2Transitions.put('a', new HashSet<>(Arrays.asList("q2")));
+	        q2Transitions.put('b', new HashSet<>(Arrays.asList("q2")));
+	        nfa.put("q2", q2Transitions);
+	    }
+
+	    private static boolean simulate(Set<String> currentStates, String input, int index) {
+	        if (index == input.length()) {
+	            return currentStates.contains("q2");
+	        }
+
+	        char symbol = input.charAt(index);
+	        Set<String> nextStates = new HashSet<>();
+	        for (String state : currentStates) {
+	            Map<Character, Set<String>> transitions = nfa.get(state);
+	            if (transitions.containsKey(symbol)) {
+	                nextStates.addAll(transitions.get(symbol));
+	            }
+	        }
+	        return simulate(nextStates, input, index + 1);
+	    }
+	    public static boolean isAccepted(String input) {
+	        return simulate(new HashSet<>(Arrays.asList("q0")), input, 0);
+	    }
+	    public static void main(String[] args) {
+	        Scanner sc = new Scanner(System.in);
+	        System.out.print("Enter Input: ");
+	        String Output = sc.nextLine();
+	        System.out.println( "Output: " + (isAccepted(Output) ? "Accepted" : "Rejected"));
+	        sc.close();
+	    }
+	}
+
+
+	    
+	
+
